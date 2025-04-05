@@ -23,4 +23,19 @@ const {
 router.post('/', upload.single('image'), createPost);
 router.get('/', getAllPosts);
 
+// GET /api/posts/trending
+router.get("/trending", async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .sort({ likes: -1, createdAt: -1 })
+      .limit(10)
+      .populate("user", "username profilePic");
+
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch trending posts" });
+  }
+});
+
+
 module.exports = router;

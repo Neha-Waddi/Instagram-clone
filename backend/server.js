@@ -3,10 +3,17 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const authRoutes = require('./routes/authRoutes');
+
+
 
 dotenv.config();
 
 const app = express();
+
+const storyRoutes=require('./routes/storyRoutes.js');
+app.use('/api/stories', storyRoutes);
+
 
 app.use(express.json());
 app.use(cors({
@@ -20,6 +27,8 @@ app.use(cookieParser());
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
+
+app.use('/api/auth', authRoutes);
 
 const postRoutes = require('./routes/postRoutes');
 app.use('/api/posts', postRoutes);
