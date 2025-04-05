@@ -1,16 +1,26 @@
-const express = require("express");
+// routes/postRoutes.js
+const express = require('express');
 const router = express.Router();
-const Post = require("../models/Post");
+const { createPost, getAllPosts } = require('../controllers/postController');
+const upload = require('../middleware/upload');
 
-router.post("/create", async (req, res) => {
-  try {
-    const { user, image, caption } = req.body;
-    const newPost = new Post({ user, image, caption });
-    await newPost.save();
-    res.status(201).json("Post created successfully");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+const {
+    likePost,
+    unlikePost,
+    addComment,
+  } = require('../controllers/postController');
+  
+  // Like a post
+  router.put('/like/:id', likePost);
+  
+  // Unlike a post
+  router.put('/unlike/:id', unlikePost);
+  
+  // Add comment
+  router.post('/comment/:id', addComment);
+  
+
+router.post('/', upload.single('image'), createPost);
+router.get('/', getAllPosts);
 
 module.exports = router;
