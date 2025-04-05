@@ -22,6 +22,7 @@ function Login() {
             );
 
             console.log("Login Successful:", response.data);
+            localStorage.setItem("userId", response.data.user._id);
             navigate("/dashboard"); 
         } catch (error) {
             console.error("Login Failed:", error.response?.data?.message || error.message);
