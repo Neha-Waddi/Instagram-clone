@@ -4,8 +4,15 @@ const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/auth");
+const upload = require('../middleware/upload'); // your multer-cloudinary setup
+const { updateProfilePicAndBio } = require('../controllers/userController');
+
 
 const router = express.Router();
+
+const {getUserProfile}=require('../controllers/userController')
+
+router.get('/profile/:id',getUserProfile);
 
 router.post(
   "/register",
@@ -87,17 +94,27 @@ router.post(
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure in production
+        secure: process.env.NODE_ENV === "production",
         sameSite: "Lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.status(200).json({ message: "Login successful", token });
+      // ✅ SEND THE USER ID IN RESPONSE
+      res.status(200).json({
+        message: "Login successful",
+        token,
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+      });
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
   }
 );
+
 
 router.post("/logout", (req, res) => {
   res.cookie("token", "", { httpOnly: true, expires: new Date(0), secure: true, sameSite: "Lax" });
@@ -116,5 +133,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+
+router.put('/profile/update/:id', upload.single('profilePic'), updateProfilePicAndBio);
 
 module.exports = router;

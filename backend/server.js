@@ -21,6 +21,10 @@ app.use(cookieParser());
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
 
+const postRoutes = require('./routes/postRoutes');
+app.use('/api/posts', postRoutes);
+
+
 if (!process.env.MONGO_URI || !process.env.JWT_SECRET) {
     console.error("Error: Missing environment variables (MONGO_URI or JWT_SECRET)");
     process.exit(1);
