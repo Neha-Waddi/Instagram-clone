@@ -1,80 +1,109 @@
-// controllers/postController.js
 const Post = require('../models/Post');
+const cloudinary = require('cloudinary').v2;
 
-exports.createPost = async (req, res) => {
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+const createPost = async (req, res) => {
   try {
     const { caption } = req.body;
-    const image = req.file.path;
+    const image = req.file?.path; // use .path for Cloudinary
 
-    const newPost = new Post({
-      user: req.body.userId, // Or from auth middleware
-      image,
-      caption,
+    if (!image) return res.status(400).json({ message: 'Image is required' });
+
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(image, {
+      folder: 'posts',
     });
 
-    await newPost.save();
-    res.status(201).json({ message: 'Post created', post: newPost });
+    const post = await Post.create({
+      caption,
+      image: result.secure_url, // save Cloudinary URL
+      user: req.user._id,
+    });
+
+    res.status(201).json(post);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Post creation failed:', err); // ✅ this will help you debug
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-exports.getAllPosts = async (req, res) => {
+
+
+// backend/controllers/postController.js
+
+const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
-  .populate('user', 'username profilePic') // populate post author
-  .populate('comments.user', 'username profilePic') // populate commenter
-  .sort({ createdAt: -1 });
+      .populate('user', 'name username profilePic')
+      .populate('comments.user', 'name')
+      .sort({ createdAt: -1 });
 
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-// Like a post
-exports.likePost = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.body;
+const getUserPosts = (req, res) => {};
 
+
+const likePost = async (req, res) => {
   try {
-    const post = await Post.findById(id);
-    if (!post.likes.includes(userId)) {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const userId = req.user._id;
+    const index = post.likes.indexOf(userId);
+
+    if (index === -1) {
       post.likes.push(userId);
-      await post.save();
+    } else {
+      post.likes.splice(index, 1); // unlike
     }
-    res.json(post);
+
+    await post.save();
+    res.json({ likes: post.likes.length, liked: index === -1 });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-// Unlike a post
-exports.unlikePost = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.body;
+const commentOnPost = async (req, res) => {
+  const { text } = req.body;
 
   try {
-    const post = await Post.findById(id);
-    post.likes = post.likes.filter((uid) => uid.toString() !== userId);
+    const post = await Post.findById(req.params.id).populate('comments.user', 'name');
+
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const comment = {
+      user: req.user._id,
+      text,
+      createdAt: new Date(),
+    };
+
+    post.comments.push(comment);
     await post.save();
-    res.json(post);
+
+    await post.populate('comments.user', 'name'); // re-populate for latest comment
+
+    res.status(201).json({ comments: post.comments });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
-
-// Add a comment
-exports.addComment = async (req, res) => {
-  const { id } = req.params;
-  const { userId, text } = req.body;
-
-  try {
-    const post = await Post.findById(id);
-    post.comments.push({ user: userId, text });
-    await post.save();
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+module.exports = {
+  createPost,
+  getAllPosts,
+  getUserPosts,
+  likePost,
+  commentOnPost
 };
