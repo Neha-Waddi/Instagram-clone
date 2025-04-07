@@ -40,7 +40,7 @@ export default function PostCard({ post }) {
           alt="Profile"
           className="w-10 h-10 rounded-full object-cover"
         />
-        <span className="font-medium text-gray-800">{post.user.name || 'User'}</span>
+        <span className="font-medium text-gray-800">{post.user.username || 'User'}</span>
       </div>
 
       {/* Post Image */}

@@ -18,3 +18,9 @@ mongoose
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => console.error('MongoDB connection failed:', err));
+
+  app.use((req, res, next) => {
+    console.log(`[404] ${req.method} ${req.originalUrl}`);
+    res.status(404).send('Route not found');
+  });
+  

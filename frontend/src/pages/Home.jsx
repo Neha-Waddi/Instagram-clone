@@ -4,10 +4,9 @@ import API from '../api';
 import { useAuth } from '../context/AuthContext'; // Make sure you have context for auth
 import PostCard from '../components/PostCard';
 import StoryBar from '../components/StoryBar';
-import CreatePost from '../components/CreatePost';
 import logo from '../images/logo.png';
 import avatar from '../images/avatar.jpeg';
-
+import UploadStory from '../components/UploadStory';
 
 export default function Home() {
   const { user, logout } = useAuth();  // Assuming user and logout are from your AuthContext
@@ -34,10 +33,7 @@ export default function Home() {
     }
   }, [user]);
 
-  const handlePostCreated = (newPost) => {
-    setPosts([newPost, ...posts]);
-  };
-
+ 
   const navItems = [
     { name: 'Home', icon: '🏠', path: '/' },
     { name: 'Search', icon: '🔍', path: '/search' },
@@ -82,18 +78,19 @@ export default function Home() {
         >
           Logout
         </button>
-<Link to="/reels/upload">Go to Upload Reels</Link>
+       
 
       </div>
 
       {/* ----- MAIN CONTENT ----- */}
       <div className="flex-1 md:ml-64 max-w-2xl mx-auto">
         <div className="bg-white p-4 mb-4 rounded-lg shadow-sm overflow-x-auto">
-          <StoryBar />
+        <UploadStory/>
+        <StoryBar/>
         </div>
+        
 
         <div className="space-y-6">
-          {user && <CreatePost onPostCreated={handlePostCreated} />}
           
           {posts.length === 0 ? (
             <p className="text-center py-10">No posts yet</p>
@@ -110,14 +107,14 @@ export default function Home() {
         <div className="bg-white p-4 rounded-lg shadow-sm sticky top-4">
           <div className="flex items-center mb-6">
             <img 
-              src={user.profilePic || avatar} 
+              src={user.user.profilePic || avatar} 
               alt="Profile" 
               className="h-12 w-12 rounded-full cursor-pointer"
-              onClick={() => navigate(`/profile/${user?.username}`)}
+              onClick={() => navigate(`/profile/${user.user._id}`)}
             />
             <div className="ml-4">
-              <p className="font-semibold cursor-pointer" onClick={() => navigate(`/profile/${user?.username}`)}>
-                {user?.username}
+              <p className="font-semibold cursor-pointer" onClick={() => navigate(`/profile/${user.username}`)}>
+                {user.user.username}
               </p>
               <p className="text-gray-500">{user?.name}</p>
             </div>

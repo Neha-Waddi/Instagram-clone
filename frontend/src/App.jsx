@@ -12,6 +12,7 @@ import MessagesPage from './pages/MessagePage';
 import Feed from './pages/Feed';
 import Reels from './pages/Reels';
 import UploadReels from './pages/UploadReel';
+import UploadStory from './components/UploadStory';
 
 function App() {
   const { user } = useAuth();
@@ -34,6 +35,9 @@ function App() {
         <Route path="/feed" element={user ? <Feed /> : <Navigate to="/login" />} />
         <Route path="/reels" element={user ? <Reels /> : <Navigate to="/login" />} />
         <Route path="/reels/upload" element={user ? <UploadReels /> : <Navigate to="/login" />} />
+        <Route path="/upload-story" element={user ? <UploadStory /> : <Navigate to="/login" />} />
+
+        
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />
       </Routes>
