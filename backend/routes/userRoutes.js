@@ -1,22 +1,28 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
-const User = require("../models/User");
-const authMiddleware = require("../middleware/auth");
-const upload = require('../middleware/upload'); // your multer-cloudinary setup
-const { updateProfilePicAndBio } = require('../controllers/userController');
-
-
+// backend/routes/userRoutes.js
+const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/upload'); // Assuming the upload middleware is defined here
+const protect = require('../middleware/authMiddleware'); // JWT authentication middleware
+const User = require('../models/User');
+const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const {getUserProfile}=require('../controllers/userController')
 
-router.get('/profile/:id',getUserProfile);
+
+const {
+  getUserProfile,
+  followUser,
+  unfollowUser,
+  updateProfile,
+  searchUsers
+} = require('../controllers/userController');
+const authenticateToken = require('../middleware/authMiddleware');
 
 router.post(
-  "/register",
+  '/register',
   [
+    body("name").notEmpty().withMessage("Full Name is required"),
     body("username").notEmpty().withMessage("Username is required"),
     body("email").isEmail().withMessage("Valid email is required"),
     body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
@@ -24,11 +30,11 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ message: "Validation failed", errors: errors.array() });
     }
 
     try {
-      const { username, email, password } = req.body; // Removed fullName
+      const { name, username, email, password } = req.body;
 
       let user = await User.findOne({ email });
       if (user) {
@@ -38,6 +44,7 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       user = new User({
+        name,       // ✅ Include name here
         username,
         email,
         password: hashedPassword,
@@ -62,78 +69,41 @@ router.post(
     }
   }
 );
-
-router.post(
-  "/login",
-  [
-    body("email").isEmail().withMessage("Valid email is required"),
-    body("password").notEmpty().withMessage("Password is required"),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const { email, password } = req.body;
-
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(400).json({ message: "Invalid email or password" });
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid email or password" });
-      }
-
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
-      });
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-
-      // ✅ SEND THE USER ID IN RESPONSE
-      res.status(200).json({
-        message: "Login successful",
-        token,
-        user: {
-          _id: user._id,
-          username: user.username,
-          email: user.email,
-        },
-      });
-    } catch (err) {
-      res.status(500).json({ message: "Server error", error: err.message });
-    }
-  }
-);
+router.get('/search', protect, searchUsers);
 
 
-router.post("/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0), secure: true, sameSite: "Lax" });
-res.status(200).json({ message: "Logged out successfully" });
 
-});
+// GET user profile by ID
+router.get('/:id', protect, getUserProfile);
 
-router.get("/me", authMiddleware, async (req, res) => {
+// Follow a user
+router.put('/follow/:id', protect, followUser);
+
+// Unfollow a user
+router.put('/unfollow/:id', protect, unfollowUser);
+
+// Edit profile (update name, bio, and profile picture)
+router.put('/edit-profile', protect, upload.single('profilePic'), updateProfile);
+
+// Update profile with profile picture
+router.put('/update/:id', upload.single('profilePic'), async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const { name, bio } = req.body;
+    const updates = { name, bio };
+
+    // If image uploaded via Cloudinary, req.file.path is the secure URL
+    if (req.file && req.file.path) {
+      updates.profilePic = req.file.path;
     }
-    res.status(200).json(user);
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
+    res.json({ user: updatedUser });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    console.error('Error updating profile:', err.message);
+    res.status(500).json({ message: 'Failed to update profile' });
   }
 });
-
-router.put('/profile/update/:id', upload.single('profilePic'), updateProfilePicAndBio);
+// From your backend code
+// In your userRoutes.js
 
 module.exports = router;
