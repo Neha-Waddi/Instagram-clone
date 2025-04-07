@@ -2,7 +2,7 @@
 const User = require('../models/User');
 const Post = require('../models/Post');
 const cloudinary = require('../utils/cloudinary'); // ✅ Make sure this is present
-
+const bcrypt = require('bcrypt');
 
 exports.getUserProfile = async (req, res) => {
   try {
@@ -103,3 +103,29 @@ exports.searchUsers = async (req, res) => {
   }
 };
 
+exports.updateUser=async (req,res)=>{
+  const { userId, newEmail, newPassword } = req.body;
+
+  try {
+    const updates = {};
+    if (newEmail) updates.email = newEmail;
+    if (newPassword) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.deleteUser=async (req,res)=>{
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'User deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

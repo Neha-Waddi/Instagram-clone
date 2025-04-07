@@ -12,6 +12,7 @@ const reelRoutes = require('./routes/reelRoutes');
 const storyRoutes=require('./routes/storyRoutes');
 
 
+
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,6 +38,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/posts',postRoutes);
 app.use('/api/reels', reelRoutes);
 app.use('/api/stories',storyRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('API is running...');

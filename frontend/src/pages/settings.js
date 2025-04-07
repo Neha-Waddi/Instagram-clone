@@ -1,4 +1,4 @@
-// pages/Settings.jsx
+// src/pages/Settings.jsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,7 @@ const Settings = () => {
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const navigate = useNavigate();
-
-  const userId = localStorage.getItem('userId'); // or get from context
+  const userId = localStorage.getItem('userId');
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -22,7 +21,6 @@ const Settings = () => {
       setNewEmail('');
       setNewPassword('');
     } catch (err) {
-      console.error(err);
       alert('Failed to update');
     }
   };
@@ -33,7 +31,6 @@ const Settings = () => {
       localStorage.clear();
       navigate('/login');
     } catch (err) {
-      console.error(err);
       alert('Logout failed');
     }
   };
@@ -47,7 +44,6 @@ const Settings = () => {
       localStorage.clear();
       navigate('/signup');
     } catch (err) {
-      console.error(err);
       alert('Delete failed');
     }
   };
@@ -71,7 +67,7 @@ const Settings = () => {
           onChange={(e) => setNewPassword(e.target.value)}
           className="w-full p-2 border rounded"
         />
-        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded w-full">
           Update
         </button>
       </form>

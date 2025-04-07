@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/upload'); // Assuming the upload middleware is defined here
 const protect = require('../middleware/authMiddleware'); // JWT authentication middleware
+
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
@@ -15,7 +16,9 @@ const {
   followUser,
   unfollowUser,
   updateProfile,
-  searchUsers
+  searchUsers,
+  updateUser,
+  deleteUser
 } = require('../controllers/userController');
 const authenticateToken = require('../middleware/authMiddleware');
 
@@ -103,7 +106,7 @@ router.put('/update/:id', upload.single('profilePic'), async (req, res) => {
     res.status(500).json({ message: 'Failed to update profile' });
   }
 });
-// From your backend code
-// In your userRoutes.js
+router.put('/update', updateUser);
+router.delete('/delete/:id', deleteUser);
 
 module.exports = router;

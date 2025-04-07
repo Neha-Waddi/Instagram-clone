@@ -39,7 +39,6 @@ export default function Home() {
     { name: 'Search', icon: '🔍', path: '/search' },
     { name: 'Explore', icon: '🌐', path: '/feed' },
     { name: 'Reels', icon: '🎥', path: '/reels' },
-    { name: 'Messages', icon: '💬', path: '/messages' },
     { name: 'Create', icon: '➕', path: '/create' },
     { name: 'Profile', icon: '👤', path: `/profile/${user.user._id}` },
     { name: 'Settings', icon: '⚙️', path: '/settings' },

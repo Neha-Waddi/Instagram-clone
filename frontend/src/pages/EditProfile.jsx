@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import { useAuth } from '../context/AuthContext';
+import avatar from '../images/avatar.jpeg'
 
 export default function EditProfile() {
   const { user, login } = useAuth();
@@ -12,7 +13,7 @@ export default function EditProfile() {
   const [name, setName] = useState(currentUser?.name || '');
   const [bio, setBio] = useState(currentUser?.bio || '');
   const [profilePic, setProfilePic] = useState(null);
-  const [preview, setPreview] = useState(currentUser?.profilePic || '/default-avatar.png');
+  const [preview, setPreview] = useState(currentUser?.profilePic || {avatar});
 
   useEffect(() => {
     if (profilePic) {
