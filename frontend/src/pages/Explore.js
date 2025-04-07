@@ -6,7 +6,7 @@ const Explore = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/posts/trending")
+    axios.get("https://instagram-clone-m0ay.onrender.com/api/posts/trending")
       .then(res => setPosts(res.data))
       .catch(err => console.error("Failed to fetch trending", err));
   }, []);

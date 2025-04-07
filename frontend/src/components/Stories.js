@@ -7,7 +7,7 @@ const Stories = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/stories');
+        const response = await axios.get('https://instagram-clone-m0ay.onrender.com/api/stories');
         setStories(response.data);
       } catch (err) {
         console.error('Error fetching stories:', err.message);

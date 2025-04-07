@@ -14,7 +14,7 @@ const UploadStory = () => {
     formData.append('userId', userId);
 
     try {
-      await axios.post('http://localhost:5000/api/stories/upload', formData, {
+      await axios.post('https://instagram-clone-m0ay.onrender.com/api/stories/upload', formData, {
         withCredentials: true,
       });
       alert('Story uploaded!');

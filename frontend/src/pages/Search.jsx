@@ -24,7 +24,7 @@ function Search() {
       setError(null);
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/search?q=${query}`, {
+        const response = await axios.get(`https://instagram-clone-m0ay.onrender.com/api/users/search?q=${query}`, {
           withCredentials: true,
           headers: {
             'Authorization': `Bearer ${currentUser?.token}` 

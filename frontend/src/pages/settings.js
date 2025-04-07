@@ -12,7 +12,7 @@ const Settings = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:5000/api/users/update', {
+      await axios.put('https://instagram-clone-m0ay.onrender.com/api/users/update', {
         userId,
         newEmail,
         newPassword,
@@ -27,7 +27,7 @@ const Settings = () => {
 
   const logout = async () => {
     try {
-      await axios.get('http://localhost:5000/api/auth/logout', { withCredentials: true });
+      await axios.get('https://instagram-clone-m0ay.onrender.com/api/auth/logout', { withCredentials: true });
       localStorage.clear();
       navigate('/login');
     } catch (err) {
@@ -40,7 +40,7 @@ const Settings = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/users/delete/${userId}`);
+      await axios.delete(`https://instagram-clone-m0ay.onrender.com/api/users/delete/${userId}`);
       localStorage.clear();
       navigate('/signup');
     } catch (err) {
