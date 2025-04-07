@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 import { useAuth } from '../context/AuthContext';
-import { FiHeart, FiMessageCircle, FiSend, FiMoreVertical, FiMusic ,FiPlus} from 'react-icons/fi';
+import { FiHeart, FiMessageCircle, FiSend, FiMoreVertical, FiMusic, FiPlus } from 'react-icons/fi';
+import avatar from '../images/avatar.jpeg'
 
 export default function Reels() {
   const [reels, setReels] = useState([]);
@@ -30,8 +31,6 @@ export default function Reels() {
   useEffect(() => {
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
-    //   const scrollPosition = window.scrollY;
-      
       reels.forEach((reel, index) => {
         const element = document.getElementById(`reel-${reel._id}`);
         if (element) {
@@ -48,7 +47,6 @@ export default function Reels() {
   }, [reels]);
 
   useEffect(() => {
-    // Play current video and pause others
     videoRefs.current.forEach((video, index) => {
       if (video) {
         if (index === currentReelIndex) {
@@ -83,18 +81,19 @@ export default function Reels() {
   if (error) return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
 
   return (
-    <div className="relative">
+    <div className="relative bg-black">
       <Link 
         to="/reels/upload"
-        className="fixed bottom-6 right-6 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 z-50"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-full shadow-xl hover:shadow-2xl z-50 transition-all duration-300"
       >
-        <FiPlus size={24} />
+        <FiPlus size={28} />
       </Link>
+      
       {reels.map((reel, index) => (
         <div 
           key={reel._id}
           id={`reel-${reel._id}`}
-          className="h-screen w-full snap-start relative"
+          className="h-screen w-full snap-start relative flex justify-center"
         >
           <video
             ref={el => videoRefs.current[index] = el}
@@ -110,55 +109,85 @@ export default function Reels() {
             onPlay={() => handleView(reel._id)}
           />
           
-          {/* Reel overlay UI */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
+          {/* Reel overlay UI - redesigned to match the image */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
             <div className="flex justify-between items-end">
               {/* Left side - user info and caption */}
-              <div className="flex-1">
+              <div className="flex-1 max-w-[70%]">
                 <div 
-                  className="flex items-center mb-2 cursor-pointer"
+                  className="flex items-center mb-3 cursor-pointer"
                   onClick={() => navigate(`/profile/${reel.user._id}`)}
                 >
                   <img 
-                    src={reel.user.profilePic || '/default-profile.png'} 
+                    src={reel.user.profilePic || {avatar}} 
                     alt={reel.user.username}
-                    className="w-8 h-8 rounded-full mr-2"
+                    className="w-10 h-10 rounded-full mr-3 border-2 border-white"
                   />
-                  <span className="font-semibold">@{reel.user.username}</span>
+                  <div>
+                    <span className="font-bold text-lg block">@{reel.user.username}</span>
+                    <span className="text-sm text-gray-300">Follow</span>
+                  </div>
                 </div>
-                <p className="text-sm mb-2">{reel.caption}</p>
-                <div className="flex items-center text-sm">
-                  <FiMusic className="mr-1" />
-                  <span>{reel.music || 'Original sound'}</span>
+                
+                <p className="text-base mb-3 font-medium">{reel.caption}</p>
+                
+                <div className="flex items-center bg-black bg-opacity-30 rounded-full px-3 py-1 w-fit">
+                  <FiMusic className="mr-2 animate-pulse" />
+                  <span className="text-sm truncate">{reel.music || 'Original sound'}</span>
                 </div>
               </div>
               
               {/* Right side - actions */}
-              <div className="flex flex-col items-center space-y-4 ml-4">
-                <button 
-                  onClick={() => handleLike(reel._id)}
-                  className="flex flex-col items-center"
-                >
-                  <FiHeart 
-                    className={`text-2xl ${reel.likes.includes(user?._id) ? 'text-red-500 fill-red-500' : ''}`} 
+              <div className="flex flex-col items-center space-y-6 ml-4">
+                <div className="flex flex-col items-center">
+                  <button 
+                    onClick={() => handleLike(reel._id)}
+                    className="bg-black bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 transition-all"
+                  >
+                    <FiHeart 
+                      className={`text-3xl ${reel.likes.includes(user?._id) ? 'text-red-500 fill-red-500' : ''}`} 
+                    />
+                  </button>
+                  <span className="text-sm font-medium mt-1">{reel.likes.length}</span>
+                </div>
+                
+                <div className="flex flex-col items-center">
+                  <button className="bg-black bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 transition-all">
+                    <FiMessageCircle className="text-3xl" />
+                  </button>
+                  <span className="text-sm font-medium mt-1">{reel.comments.length}</span>
+                </div>
+                
+                <button className="bg-black bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 transition-all">
+                  <FiSend className="text-3xl" />
+                </button>
+                
+                <button className="bg-black bg-opacity-30 rounded-full p-2 hover:bg-opacity-50 transition-all">
+                  <FiMoreVertical className="text-3xl" />
+                </button>
+                
+                <div className="mt-4">
+                  <img 
+                    src={reel.user.profilePic || {avatar}} 
+                    alt={reel.user.username}
+                    className="w-12 h-12 rounded-full border-2 border-white"
                   />
-                  <span className="text-xs">{reel.likes.length}</span>
-                </button>
-                
-                <button className="flex flex-col items-center">
-                  <FiMessageCircle className="text-2xl" />
-                  <span className="text-xs">{reel.comments.length}</span>
-                </button>
-                
-                <button className="flex flex-col items-center">
-                  <FiSend className="text-2xl" />
-                </button>
-                
-                <button>
-                  <FiMoreVertical className="text-2xl" />
-                </button>
+                </div>
               </div>
             </div>
+            
+            {/* Bottom gradient overlay */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent -z-10"></div>
+          </div>
+          
+          {/* Top status bar */}
+          <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10">
+            <span className="text-white font-bold text-lg">Reels</span>
+            <button className="text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
           </div>
         </div>
       ))}
