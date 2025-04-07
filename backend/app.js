@@ -17,15 +17,22 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://instagram-clone-08.vercel.app"
+];
 
-const corsOptions = {
-  origin: 'http://localhost:3000',  // Allow only your frontend domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
-  credentials: true,  // Allow credentials (cookies, authorization headers, etc.)
-};
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
-app.use(cors(corsOptions)); // Apply the CORS middleware to the app
 
 app.use(morgan('dev'));
 app.use(express.json());
