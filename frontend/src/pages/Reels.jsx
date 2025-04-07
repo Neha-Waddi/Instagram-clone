@@ -119,12 +119,12 @@ export default function Reels() {
                   onClick={() => navigate(`/profile/${reel.user._id}`)}
                 >
                   <img 
-                    src={reel.user.profilePic || {avatar}} 
-                    alt={reel.user.username}
+                    src={reel.user?.profilePic || {avatar}} 
+                    alt={reel.user?.username}
                     className="w-10 h-10 rounded-full mr-3 border-2 border-white"
                   />
                   <div>
-                    <span className="font-bold text-lg block">@{reel.user.username}</span>
+                    <span className="font-bold text-lg block">@{reel.user?.username || 'user'}</span>
                     <span className="text-sm text-gray-300">Follow</span>
                   </div>
                 </div>
@@ -168,8 +168,8 @@ export default function Reels() {
                 
                 <div className="mt-4">
                   <img 
-                    src={reel.user.profilePic || {avatar}} 
-                    alt={reel.user.username}
+                    src={reel.user?.profilePic || {avatar}} 
+                    alt={reel.user?.username || 'user'}
                     className="w-12 h-12 rounded-full border-2 border-white"
                   />
                 </div>

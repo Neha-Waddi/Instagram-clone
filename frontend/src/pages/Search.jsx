@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FiSearch, FiX, FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
+import avatar from '../images/avatar.jpeg'
 
 function Search() {
   const [query, setQuery] = useState('');
@@ -106,7 +107,7 @@ function Search() {
             >
               <div className="relative">
                 <img
-                  src={user.profilePic || '/default-profile.png'}
+                  src={user.profilePic || {avatar}}
                   alt={user.username}
                   className="w-12 h-12 rounded-full object-cover mr-3"
                 />

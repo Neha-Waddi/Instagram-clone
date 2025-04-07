@@ -36,11 +36,11 @@ export default function PostCard({ post }) {
       {/* User info */}
       <div className="flex items-center gap-3 mb-3">
         <img
-          src={post.user.profilePic || avatar}
+          src={post.user?.profilePic || avatar}
           alt="Profile"
           className="w-10 h-10 rounded-full object-cover"
         />
-        <span className="font-medium text-gray-800">{post.user.username || 'User'}</span>
+        <span className="font-medium text-gray-800">{post.user?.username || 'User'}</span>
       </div>
 
       {/* Post Image */}
