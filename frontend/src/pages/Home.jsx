@@ -23,7 +23,7 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const res = await API.get('/posts/feed');
-        setPosts(res.data.reverse());
+        setPosts(res.data);
       } catch (err) {
         console.error('Failed to fetch posts');
       }
