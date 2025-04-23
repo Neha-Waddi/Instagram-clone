@@ -15,6 +15,10 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await API.post('/auth/login', { email, password });
+      const user = res.data.user;
+
+      // Save userId in localStorage
+      localStorage.setItem('userId', user._id);
       login(res.data);
       navigate('/');
     } catch (err) {

@@ -7,6 +7,8 @@ const UploadStory = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem('userId');
+    console.log('UserId:', userId);
+
     if (!media || !userId) return alert('Missing file or user.');
 
     const formData = new FormData();
