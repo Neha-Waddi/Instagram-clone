@@ -33,7 +33,7 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ message: "Validation failed", errors: errors.array() });
+      return res.status(400).json({ message: "Make sure that your passowrd has at least 6 characters", errors: errors.array() });
     }
 
     try {

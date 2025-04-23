@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Added for navigation
+import { Link, useNavigate } from 'react-router-dom'; 
 import API from '../api';
-import { useAuth } from '../context/AuthContext'; // Make sure you have context for auth
+import { useAuth } from '../context/AuthContext'; 
 import PostCard from '../components/PostCard';
 import StoryBar from '../components/StoryBar';
 import logo from '../images/logo.png';
@@ -9,13 +9,13 @@ import avatar from '../images/avatar.jpeg';
 import UploadStory from '../components/UploadStory';
 
 export default function Home() {
-  const { user, logout } = useAuth();  // Assuming user and logout are from your AuthContext
+  const { user, logout } = useAuth();  
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      navigate('/login'); // Redirect to login if user is not logged in
+      navigate('/login'); 
     }
   }, [user, navigate]);
 
