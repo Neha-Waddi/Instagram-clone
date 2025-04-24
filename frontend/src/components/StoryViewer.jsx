@@ -1,4 +1,3 @@
-// src/components/StoryViewer.jsx
 import { useEffect, useState } from 'react';
 
 export default function StoryViewer({ story, onClose }) {
@@ -8,8 +7,7 @@ export default function StoryViewer({ story, onClose }) {
     const timer = setTimeout(() => {
       setVisible(false);
       onClose();
-    }, 5000); // Auto-close after 5 seconds
-
+    }, 5000); 
     return () => clearTimeout(timer);
   }, [onClose]);
 
