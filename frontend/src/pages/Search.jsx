@@ -4,13 +4,14 @@ import axios from 'axios';
 import { FiSearch, FiX, FiUser } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import avatar from '../images/avatar.jpeg'
+import Sidebar from '../components/SideBar';
 
 function Search() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { user: currentUser } = useAuth(); // Assuming you have the logged-in user's context
+  const { user: currentUser } = useAuth(); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ function Search() {
 
   return (
     <div className="max-w-xl mx-auto p-4">
-      {/* Search Bar */}
+      <Sidebar/>
       <div className="relative mb-6">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <FiSearch className="text-gray-400" />

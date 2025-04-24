@@ -1,4 +1,3 @@
-// src/components/PostForm.jsx
 import { useState } from 'react';
 import API from '../api';
 
@@ -22,7 +21,7 @@ export default function PostForm({ onPostCreated }) {
       });
       setCaption('');
       setImage(null);
-      onPostCreated && onPostCreated(res.data); // optional callback to update feed
+      onPostCreated && onPostCreated(res.data); 
     } catch (err) {
       console.error('Error uploading post', err);
     } finally {

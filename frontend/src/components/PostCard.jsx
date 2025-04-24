@@ -33,7 +33,6 @@ export default function PostCard({ post }) {
 
   return (
     <div className="bg-white shadow-md rounded-xl p-4 mb-6">
-      {/* User info */}
       <div className="flex items-center gap-3 mb-3">
         <img
           src={post.user?.profilePic || avatar}
@@ -43,7 +42,6 @@ export default function PostCard({ post }) {
         <span className="font-medium text-gray-800">{post.user?.username || 'User'}</span>
       </div>
 
-      {/* Post Image */}
       <div className="mb-3">
         <img
           src={post.image}
@@ -52,7 +50,6 @@ export default function PostCard({ post }) {
         />
       </div>
 
-      {/* Like & Caption */}
       <div className="flex items-center gap-3 mb-2">
         <button onClick={handleLike} className={liked ? 'text-red-500' : 'text-gray-500'}>
           ❤️
@@ -61,7 +58,6 @@ export default function PostCard({ post }) {
       </div>
       <p className="text-sm text-gray-800 mb-2">{post.caption}</p>
 
-      {/* Comment Input */}
       <form onSubmit={handleComment} className="flex items-center gap-2 mb-2">
         <input
           type="text"
@@ -73,7 +69,6 @@ export default function PostCard({ post }) {
         <button type="submit" className="text-sm text-blue-600">Post</button>
       </form>
 
-      {/* Comment List */}
       <div className="space-y-1 max-h-32 overflow-y-auto">
         {comments.map((c, i) => (
           <div key={i} className="text-sm">
