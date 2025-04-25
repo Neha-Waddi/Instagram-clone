@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PostForm from '../components/PostForm';  // Import PostForm component
+import Sidebar from '../components/SideBar';
 
 export default function Create() {
   const [newPost, setNewPost] = useState(null);
@@ -11,6 +12,10 @@ export default function Create() {
 
   return (
     <div className="max-w-lg mx-auto p-4">
+        <div className="w-20 md:w-64">
+              <Sidebar />
+            </div>
+      
       <h1 className="text-2xl font-semibold mb-4">Create a New Post</h1>
       
       <PostForm onPostCreated={handlePostCreated} />  {/* Add PostForm component here */}

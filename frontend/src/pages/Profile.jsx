@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import PostCard from '../components/PostCard';
 import { Link } from 'react-router-dom';
 import avatar from '../images/avatar.jpeg';
+import Sidebar from '../components/SideBar';
 
 export default function Profile() {
   const { id } = useParams();
@@ -38,6 +39,11 @@ export default function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
+      
+      <div className="w-20 md:w-64">
+        <Sidebar />
+      </div>
+
       {/* Profile Header */}
       <div className="flex items-center px-4 py-8">
         {/* Profile Picture */}
