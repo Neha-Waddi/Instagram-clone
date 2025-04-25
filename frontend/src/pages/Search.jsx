@@ -108,7 +108,7 @@ function Search() {
             >
               <div className="relative">
                 <img
-                  src={user.profilePic || {avatar}}
+                  src={user.profilePic || avatar}
                   alt={user.username}
                   className="w-12 h-12 rounded-full object-cover mr-3"
                 />

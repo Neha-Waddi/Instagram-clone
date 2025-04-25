@@ -49,7 +49,7 @@ export default function Profile() {
         {/* Profile Picture */}
         <div className="w-24 h-24 md:w-32 md:h-32 mr-6">
           <img
-            src={profileUser.profilePic || {avatar}}
+            src={profileUser.profilePic || avatar}
             alt="Profile"
             className="w-full h-full rounded-full object-cover border border-gray-200"
           />
