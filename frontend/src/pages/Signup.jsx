@@ -15,11 +15,11 @@ function Signup() {
         e.preventDefault(); 
 
         try {
-            const res = await fetch("http://localhost:5000/api/users/register", {
+            const res = await fetch("https://instagram-clone-m0ay.onrender.com/api/users/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include", 
-                body: JSON.stringify({ name, username, email, password }), // include name
+                body: JSON.stringify({ name, username, email, password }), 
             });
 
             const data = await res.json(); 
